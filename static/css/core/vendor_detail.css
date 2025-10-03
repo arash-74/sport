@@ -1,0 +1,211 @@
+.vendor-container {
+    width: 100%;
+    padding: 10px;
+}
+
+.vendor-container .header-container {
+    width: 100%;
+    height: 300px;
+    background-color: lightskyblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+}
+.header-container .background-img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    &::after{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.43);
+        backdrop-filter: blur(5px);
+        top: 0;
+        left: 0;
+        content : ''
+    }
+}
+
+.header-container .img-container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+.header-container .info-container {
+    padding: 10px;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.header-container .verify-container {
+    position: absolute;
+}
+
+.vendor-container .verify-container {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 8px;
+    right: 8px;
+}
+
+.info-container .name-container, .info-container .contact-container {
+    font-size: 1.1rem;
+}
+
+.info-container .address-container, .info-container .rate-container {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    font-size: 0.9rem;
+
+    & .icon {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+.info-container .product-count {
+    font-size: 0.9rem;
+}
+.vendor-container .vendor-description{
+    width: 99%;
+    height: 250px;
+    /*background-color: red;*/
+    overflow-y: scroll;
+    scrollbar-width: none;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 5px black;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+.vendor-container .vendor-products{
+    margin-top: 5px;
+}
+.products-list {
+    display: grid;
+    grid-template-columns: repeat(2, 450px);
+    gap: 10px 30px;
+    margin-top: 20px;
+    place-content: center;
+    /*font-size: 1.1rem;*/
+}
+
+.products-list .product {
+    border: 1px solid var(--cthree);
+    height: 200px;
+    position: relative;
+    display: flex;
+}
+
+.products-list .product:hover {
+    transform: translateY(-5px);
+    transition: 0.2s linear;
+}
+
+.products-list .product .img-container {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.products-list .product .info-container {
+    display: flex;
+    width: 60%;
+    flex-direction: column;
+    height: 100%;
+}
+
+.products-list .product .info-container .product-title {
+    /*text-align: center;*/
+    /*margin-top: 10px;*/
+    font-size: 1.1rem;
+
+}
+
+.products-list .product .upper-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--cone);
+    color: white;
+    padding: 5px;
+    height: 100%;
+}
+
+.products-list .product .product-rate {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--cthree);
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+}
+
+.products-list .product .bottom-section {
+    border-top: 1px solid var(--cthree);
+    padding: 5px;
+    display: flex;
+    gap: 10px;
+    background-color: var(--ctwo);
+    color: white;
+
+}
+
+.products-list .product .bottom-section .price {
+    font-size: 1.4rem;
+
+}
+
+.products-list .product .bottom-section .price-wrapper {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.products-list .product .bottom-section .new-price {
+    font-size: 1.4rem;
+}
+
+.products-list .product .bottom-section .old-price {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.products-list .product .bottom-section .old-price::before {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background-color: var(--cthree);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.products-list .product .off-perc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 0, 0, 0.59);
+    /*transform: translateX(50%);*/
+    z-index: 2;
+    padding: 10px;
+}

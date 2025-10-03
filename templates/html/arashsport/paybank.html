@@ -1,0 +1,48 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}پرداخت{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/paybank.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.js"
+            integrity="sha512-VqCeCECsaE2fYTxvPQk+OJ7+SQxzI1xZ6IqxuWd0GPKaJoeSFqeakVqNpMbx1AArieciBF71poL0dYTMiNgVxA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+{% block main-container %}
+    <div class="wrapper">
+        {% if status %}
+            <div class="ok">پرداخت موفق</div>
+            <div class="cart-list">
+                {% for item in cart_to_product %}
+                    <div class="item-container">
+                        <div class="name">
+                            {{ item.product.name }}
+                        </div>
+                        <div class="qty">
+                            {{ item.qty }}
+                        </div>
+                        <div class="price">
+                            {% if item.product.off_price %}
+                                {{ item.product.off_price }}
+                            {% else %}
+                                {{ item.product.price }}
+                            {% endif %}
+                        </div>
+                        <div class="total-price">
+                            {{ item.total_price }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button onclick="download_pdf()">دانلود فاکتور</button>
+        {% else %}
+            <div class="error">خطا در پرداخت</div>
+        {% endif %}
+    </div>
+    <script type="text/javascript">
+        function download_pdf() {
+            let element = document.querySelector('.cart-list')
+            html2pdf().from(element).save()
+        }
+    </script>
+{% endblock %}

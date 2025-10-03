@@ -1,0 +1,44 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+.wrapper > div:first-child{
+    font-size: 1.5rem;
+    &.ok{
+        color: green;
+    }
+    &.error{
+        color: red;
+    }
+}
+.wrapper .cart-list{
+    height: 350px;
+    width: 600px;
+    margin-top: 50px;
+    overflow-y: auto;
+    border: 1px solid var(--cone);
+    padding:  5px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.wrapper .cart-list .item-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.cart-list .item-container > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.wrapper button{
+    background-color: var(--ctwo);
+    color: white;
+    padding: 10px;
+    outline: none;
+    border: none;
+    margin-top: 5px;
+}

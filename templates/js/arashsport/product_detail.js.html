@@ -1,0 +1,152 @@
+<script type="text/javascript">
+    let preview_img_container = document.querySelector('.product-img .right .preview-container')
+    let zoom_img_container = document.querySelector('.zoom-image-container .img-container')
+    let lense_container = document.querySelector('.preview-container .lense-container')
+    let add_comment_form = document.querySelector('.comment-container .left')
+    let comments_list = document.querySelector('.comment-container .right')
+    let error_comment = document.querySelector('.comment-container .left .error-container')
+    let message = document.querySelector('.wrapper .message-container')
+    let cart_new_marker = document.querySelector('.cart-container .img-container .new-marker')
+    let cart_content = document.querySelector('.cart-container .item-list')
+
+
+    function set_preview(el) {
+        preview_img_container.querySelector('img').src = el.src
+    }
+
+    function set_description(el) {
+        let el_siblings = [...document.querySelectorAll('.description-vendor .content > div')]
+        el_siblings.forEach(div => {
+            div.classList.remove('show')
+        })
+        document.querySelector(`.description-vendor .content > div.${el.dataset['target']}`).classList.add('show')
+    }
+
+    function message_handler(text) {
+        message.querySelector('p').innerText = text
+        message.classList.remove('hide')
+        setTimeout(() => {
+            message.classList.add('hide')
+        }, 1500)
+
+    }
+
+    function add_review_handler(el) {
+        let data = new FormData(el)
+        fetch(el.getAttribute('action'), {
+            method: 'POST',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            body: data
+        }).then(res => res.json()).then(res => {
+            if (res['status'] === 'ok') {
+                error_comment.style.display = 'block'
+                error_comment.style.color = '#d3b40f'
+                error_comment.innerText = res['msg']
+                if (data.get('content')) {
+                    comments_list.insertAdjacentHTML('afterbegin', `                                <div class="cm-container">
+                                    <div class="user-info">
+                                        {{ user.get_full_name }}
+                                    </div>
+                                    <div class="cm-content">
+                                        ${data.get('content')}
+                                    </div>
+                                </div>
+`)
+                    document.querySelector('.description-vendor .tab-container button:nth-child(2)').innerHTML = 'نظرات(' + res['counter'] + ')'
+                }
+                el.querySelector('select[name=rate]').value = ''
+                el.querySelector('textarea[name=content]').value = ''
+
+            }
+            if (res['status'] === 'error') {
+
+                error_comment.innerText = '*' + res['msg']
+                error_comment.style.display = 'block'
+
+            }
+        })
+    }
+
+    function add_cart_handler(el) {
+        fetch('{% url 'arashsport:add cart' %}', {
+            method: 'POST',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            body: JSON.stringify({
+                product_id: {{ product.id }},
+                quantity: document.querySelector('.info-container .quantity input').value
+            })
+        }).then(res => res.json()).then(res => {
+            message_handler(res['msg'])
+            if (res['status'] === 'ok') {
+                cart_new_marker.classList.add('show')
+                cart_content.innerHTML = ''
+                res['items'].forEach(item => {
+                    console.log(item)
+                    cart_content.insertAdjacentHTML('beforeend', `
+                        <div class="item">
+                            <div class="img">
+                                <img src="${item.image}">
+                            </div>
+                            <div class="info-container">
+                                <div class="name">${item.name}</div>
+                            </div>
+                            <div class="quantity">
+                                ${item.qty}
+                            </div>
+                            <div class="price-container">
+                                ${item.price}
+                            </div>
+                        </div>`)
+                })
+
+            }
+
+        })
+    }
+
+    function wish_handler(el) {
+        let data = new FormData()
+        data.append('status', el.dataset.status)
+        fetch('{% url 'arashsport:wish' product.id %}', {
+            method: "POST",
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            body: data
+        }).then(res => res.json()).then(res => {
+            message_handler(res['msg'])
+            if (res['status'] === 'ok') {
+                el.children[0].remove()
+                let icon = document.createElement('i')
+                icon.classList.add(res['icon_status'],'fa-bookmark')
+                el.dataset['status'] = res['icon_status']
+                el.append(icon)
+            }
+        })
+    }
+
+    preview_img_container.addEventListener('mouseenter', e => {
+        zoom_img_container.classList.add('show')
+        lense_container.classList.add('show')
+    })
+    preview_img_container.addEventListener('mouseleave', e => {
+        zoom_img_container.classList.remove('show')
+        lense_container.classList.remove('show')
+    })
+    preview_img_container.addEventListener('mousemove', e => {
+        const preview_rect = preview_img_container.getBoundingClientRect()
+        let x = e.clientX - preview_rect.left
+        let y = e.clientY - preview_rect.top
+        x = Math.min(Math.max(x, lense_container.clientWidth / 2), preview_rect.width - lense_container.clientWidth / 2)
+        y = Math.min(Math.max(y, lense_container.clientHeight / 2), preview_rect.height - lense_container.clientHeight / 2)
+
+        lense_container.style.left = (x - lense_container.clientWidth / 2) + 'px'
+        lense_container.style.top = (y - lense_container.clientHeight / 2) + 'px'
+
+        zoom_img_container.style.backgroundImage = `url(${preview_img_container.querySelector('img').src})`
+        zoom_img_container.style.backgroundSize = `${preview_rect.width * 2}px ${preview_rect.height * 2}px`
+        zoom_img_container.style.backgroundPosition = `${-(x - lense_container.clientWidth / 2) * 2}px ${-(y - lense_container.clientWidth / 2) * 2}px`
+    })
+    add_comment_form.addEventListener('submit', e => {
+        e.preventDefault()
+        add_review_handler(e.target)
+    })
+</script>

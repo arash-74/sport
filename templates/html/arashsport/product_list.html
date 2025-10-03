@@ -1,0 +1,11 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% block title %}لیست محصولات{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/product_list.css' %}">
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    {% include 'html/arashsport/product_list_component.html' with products=products featured_products=featured_products %}
+
+{% endblock %}

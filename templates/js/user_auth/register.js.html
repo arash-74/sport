@@ -1,0 +1,108 @@
+<script type="text/javascript">
+    let email_container = document.querySelector('.form-container .enter-email-container')
+    let otp_container = document.querySelector('.form-container .enter-otp-container')
+    let email_input = document.querySelector('.form-container .enter-email-container input')
+    let message_container = document.querySelector('.signin-container .message-container .message')
+    let send_code_btn = document.querySelector('.form-container .send-code')
+    let second_section = document.querySelector('.signin-container .second-section')
+    {#let enter_email_form = document.querySelector('.enter-email')#}
+    {#let enter_otp_form = document.querySelector('.enter-otp')#}
+    let send_code_again_btn = document.querySelector('.form-container .enter-otp-container .middle-section .resend-code')
+    let change_number = document.querySelector('.form-container .enter-otp-container .middle-section .change-number')
+    {#let register_btn = document.querySelector('.enter-otp input.submit-btn')#}
+
+    function counter_down() {
+        email_container.style.display = 'none'
+        otp_container.style.display = 'flex'
+        send_code_again_btn.disabled = true
+        change_number.style.display = 'none'
+        let duration = 60
+        let startTime = localStorage.getItem('code')
+        const interval = setInterval(() => {
+            let now = Math.floor(Date.now() / 1000)
+            let remainingTime = duration - (now - startTime)
+            send_code_again_btn.innerText = ''
+            if (remainingTime <= 0) {
+                localStorage.removeItem('code')
+                send_code_again_btn.innerText = 'ارسال مجدد کد'
+                send_code_again_btn.disabled = false
+                change_number.style.display = 'block'
+                clearInterval(interval)
+            } else {
+                let showTime = remainingTime < 10 ? '0' + remainingTime : remainingTime
+                send_code_again_btn.innerText = `00:${showTime}`
+            }
+        }, 1001)
+
+    }
+
+    function send_code_handler() {
+        fetch('{% url 'user_auth:send otp' %}', {
+            method: "POST",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.cookie.split('=')[1]
+            },
+            body: JSON.stringify({
+                email: email_input.value
+            })
+        }).then(res => res.json()).then(res => {
+            if (res['status'] === 'ok') {
+                show_message('کد تایید با موفقیت به ایمیل ارسال شد', 'info')
+                let startTime = Math.floor(Date.now() / 1000)
+                localStorage.setItem('code', startTime)
+                counter_down()
+            }
+            if (res['status'] === 'error') {
+                show_message(res['msg'], 'error')
+
+            }
+        })
+    }
+
+    function show_message(msg, cls) {
+        message_container.innerHTML = msg
+        message_container.parentElement.classList.add(cls)
+        second_section.classList.remove('hide-msg')
+        setTimeout(() => {
+            second_section.classList.add('hide-msg')
+        }, 2000)
+    }
+
+    window.addEventListener('load', () => {
+        if (!email_container.classList.contains('hide-msg')) {
+            setTimeout(() => {
+                second_section.classList.add('hide-msg')
+            }, 2000)
+        }
+        {% comment %}{% endcomment %}
+        fetch('{% url 'user_auth:session is valid' %}', {
+            method: 'GET',
+        }).then(res => res.json()).then(res => {
+            if (res['status'] === 'valid') {
+                if (localStorage.getItem('code')) {
+                    counter_down()
+                }
+            } else {
+                localStorage.removeItem('code')
+            }
+        })
+        send_code_btn.addEventListener('click', e => {
+            e.preventDefault()
+            if (email_input.value === '') {
+                show_message('لطفا ایمیل را وارد کنید', 'error')
+            } else {
+                send_code_handler()
+            }
+        })
+        change_number.addEventListener('click', () => {
+            email_container.style.display = 'flex'
+            otp_container.style.display = 'none'
+        })
+        send_code_again_btn.addEventListener('click', () => {
+            send_code_handler()
+        })
+    })
+
+
+</script>

@@ -1,0 +1,247 @@
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.nav-container {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: white;
+    position: relative;
+    z-index: 99;
+}
+
+.nav-container .links {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.nav-container .links .btn {
+    padding: 10px;
+    background-color: var(--ctwo);
+    color: white;
+    border-radius: 10px;
+}
+
+.links .category-btn {
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: inset 0 0 5px white;
+    }
+}
+
+.links .category-btn .content {
+    position: absolute;
+    width: 190px;
+    top: 40px;
+    left: 5px;
+    background-color: var(--ctwo);
+    box-shadow: 0 0 10px black;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    gap: 5px;
+    pointer-events: none;
+    transition: 0.2s linear;
+
+    &.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.category-btn .content .item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+
+    &:hover {
+        box-shadow: 0 0 10px var(--cone);
+        color: var(--cthree);
+    }
+}
+
+.category-btn .content .item .img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: red;
+    /*padding: 0;*/
+
+
+}
+
+.nav-container .label-container {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-container {
+    position: relative;
+}
+
+.cart-container .img-container {
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--ctwo);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.36);
+    position: relative;
+    cursor: pointer;
+
+    & .new-marker {
+        width: 15px;
+        height: 15px;
+        background-color: red;
+        border-radius: 50%;
+        bottom: 0;
+        right: 0;
+        transform: translate(50%, 50%);
+        position: absolute;
+        content: '';
+        display: none;
+    }
+
+    & .new-marker.show {
+        display: block;
+    }
+
+}
+
+.cart-container .content-container {
+    border-radius: 5px;
+    border: 1px solid var(--ctwo);
+    background-color: white;
+    width: 170px;
+    position: absolute;
+    top: 99%;
+    left: 50%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+.cart-container .content-container a{
+    width: 80%;
+    height: 30px;
+    border-radius: 5px;
+    background-color:   var(--ctwo);
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    &:hover{
+        color: var(--cthree);
+    }
+}
+.cart-container .content-container .item-list{
+    display: flex;
+        font-size: 0.7rem;
+
+    flex-direction: column;
+    gap: 5px;
+    height: 100%;
+    overflow-y: auto;
+    margin-top: 5px;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+}
+.cart-container .item{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    justify-content: space-between;
+}
+.cart-container .item .img{
+    width: 40px;
+    height: 40px;
+}
+.cart-container .content-container{
+    opacity: 0;
+    pointer-events: none;
+}
+.cart-container:hover > .content-container{
+    opacity: 1;
+    pointer-events: auto;
+}
+.register-link {
+    width: 100px;
+    height: 40px;
+    background: var(--cone);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    border: 1px solid var(--cthree);
+    transition: 0.2s linear;
+
+    &:hover {
+        box-shadow: 0 0 10px var(--cone);
+        color: var(--cthree);
+    }
+}
+
+.profile-container {
+    width: 45px;
+    height: 45px;
+    background-color: var(--cone);
+    border-radius: 50%;
+    padding: 3px;
+    cursor: pointer;
+    transition: 0.2s linear;
+    position: relative;
+
+    &:hover {
+        box-shadow: inset 0 0 5px white;
+    }
+}
+
+.profile-container .content {
+    position: absolute;
+    width: 120px;
+    top: 40px;
+    left: 5px;
+    background-color: var(--ctwo);
+    box-shadow: 0 0 10px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s linear;
+
+    &.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.content .link {
+    color: white;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--cthree);
+    }
+}

@@ -1,0 +1,81 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}سبد خرید{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/cart_list.css' %}">
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    <div class="wrapper">
+        <div class="right">
+            <div class="total-price-container">
+                <div class="price-sum">
+                    <span>مبلغ کل:</span>
+
+                    <span>{{ price_sum|price_handler }} تومان</span>
+                </div>
+                <div class="off-price">
+                    <span>تخفیف:</span>
+                    <span>{{ off_price|price_handler }} تومان </span>
+                </div>
+                <div style="width: 50%;height: 2px; background-color: var(--ctwo)"></div>
+                <div class="total-price">
+                    <span>قابل پرداخت</span>
+                    <span>{{ total_price|price_handler }} تومان </span>
+                </div>
+            </div>
+            <div class="address-container">
+                <span>آدرس: {{ address }}</span>
+                <span>تلفن: {{ phone }}</span>
+                <a href="#">تغییر اطلاعات</a>
+            </div>
+        </div>
+        <div class="left">
+            <div class="cart-list">
+                {% for item in cart.cart_to_product %}
+                    <div class="item-container">
+                        <div class="imag-container">
+                            <img src="{{ item.product.images.first.image.url }}">
+                        </div>
+                        <div class="name">
+                            {{ item.product.name }}
+                        </div>
+                        <div class="qty">
+                            {{ item.qty }}
+                        </div>
+                        <div class="price">
+                            {% if item.product.off_price %}
+                                {{ item.product.off_price }}
+                            {% else %}
+                                {{ item.product.price }}
+                            {% endif %}
+                        </div>
+                        <div class="total-price">
+                            {{ item.total_price }}
+                        </div>
+                        <div class="remove-btn" data-id="{{ item.product.id }}" onclick="del_cart_handler(this)">
+                            X
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="pay-btn" href="{% url 'arashsport:pay' %}">پرداخت</a>
+        </div>
+    </div>
+    <script>
+        function del_cart_handler(el) {
+            fetch('{% url 'arashsport:del cart' %}', {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                body:JSON.stringify({
+                    "id":el.dataset['id']
+                })
+            }).then(res => res.json()).then(res => {
+                if(res['status']){
+                    el.parentElement.remove()
+                }
+            })
+        }
+    </script>
+{% endblock %}

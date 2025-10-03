@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    let message = document.querySelector('.message-container')
+    let preload = document.querySelector('.preload')
+    let slides = [...document.querySelectorAll('.slideshow-container > div')]
+
+    let current_slide = 1
+
+    function slide_show_handel() {
+        setInterval(() => {
+            let elem = slides[current_slide - 1]
+            elem.children[0].classList.add('hidden')
+            elem.children[1].classList.add('hidden')
+            current_slide += 1
+            if (current_slide > 3) {
+                current_slide = 1
+            }
+            elem = slides[current_slide - 1]
+            elem.children[0].classList.remove('hidden')
+            elem.children[1].classList.remove('hidden')
+
+        }, 5000)
+
+    }
+
+    {% comment %} if (current_slide === 3) {
+
+slides[current_slide - 1].children[0].style.left = '-100%'
+slides[current_slide - 1].children[1].style.right = '100%'
+}{% endcomment %}
+    {##}
+
+    function hidden_preload() {
+        message && setTimeout(()=>{message.classList.add('hide')},2000)
+        preload.style.opacity = 0
+        preload.style.pointerenter = 'none'
+        setTimeout(() => {
+            preload.remove()
+        }, 500)
+
+    }
+
+    window.addEventListener('load', () => {
+        
+        hidden_preload()
+        slide_show_handel()
+    })
+</script>

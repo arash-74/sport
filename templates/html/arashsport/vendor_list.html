@@ -1,0 +1,40 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}لیست فروشنده ها{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/vendors_list.css' %}">
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    <div class="vendors-container">
+        {% for vendor in vendors %}
+            <a href="{{ vendor.get_absolute_url }}" class="vendor-container">
+                {% if vendor.verified %}
+                    <div class="verify-container">
+                        <img src="{% static 'svg/check-circle-svgrepo-com.svg' %}">
+                    </div>
+                {% endif %}
+                <div class="img-container">
+                    <img src="{{ vendor.image.url }}">
+                </div>
+                <div class="info-container">
+                    <div class="name-container">
+                        {{ vendor.name }}
+                    </div>
+                    <div class="contact-container">
+                        {{ vendor.contact }}
+                    </div>
+                    <div class="address-container">
+                        <span class="icon"><img src="{% static 'svg/location-pin-alt-1-svgrepo-com.svg' %}"></span>{{ vendor.address }}
+                    </div>
+                    <div class="rate-container">
+                        <span class="icon"><img src="{% static 'svg/star-svgrepo-com.svg' %}"></span>{{ vendor.vid|calc_vendor_rate }}
+                    </div>
+                    <div class="product-count">{{ vendor.products.count }} محصول</div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock %}

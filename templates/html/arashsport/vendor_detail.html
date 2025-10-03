@@ -1,0 +1,80 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}لیست فروشنده ها{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/vendor_detail.css' %}">
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    <div class="vendor-container">
+        <div class="header-container">
+            <div class="img-container">
+                {% if vendor.verified %}
+                    <div class="verify-container">
+                        <img src="{% static 'svg/check-circle-svgrepo-com.svg' %}">
+                    </div>
+                {% endif %}
+                <img src="{{ vendor.image.url }}">
+            </div>
+            <div class="vendor-info">
+                <div class="info-container">
+                    <div class="name-container">
+                        {{ vendor.name }}
+                    </div>
+                    <div class="contact-container">
+                        {{ vendor.contact }}
+                    </div>
+                    <div class="address-container">
+                    <span class="icon"><img
+                            src="{% static 'svg/location-pin-alt-1-svgrepo-com.svg' %}"></span>{{ vendor.address }}
+                    </div>
+                    <div class="rate-container">
+                    <span class="icon"><img
+                            src="{% static 'svg/star-svgrepo-com.svg' %}"></span>{{ vendor.vid|calc_vendor_rate }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="vendor-description">
+            {{ vendor.description|safe }}
+        </div>
+        <div class="vendor-products">
+            <h4>{{ vendor.products.count }} محصول در این فروشگاه یافت شد!</h4>
+        </div>
+        <div class="products-list">
+            {% for product in vendor.products.all %}
+                <a href="#" class="product">
+                    <div class="product-rate">{{ product.rate }}</div>
+                    {% if product.off_price %}
+                        <div class="off-perc">{{ product.calc_off_percentage }}%</div>
+                    {% endif %}
+                    <div class="img-container">
+                        <img src="{{ product.images.first.image.url }}">
+                    </div>
+                    <div class="info-container">
+
+                        <div class="upper-section">
+                            <div class="product-title">{{ product.name|truncatewords:15 }}</div>
+                            <div class="vendor-info">{{ product.vendor.name }}</div>
+                        </div>
+                        <div class="bottom-section">
+                            {% if product.off_price %}
+                                <div class="old-price">{{ product.price|price_handler }}</div>
+                                <div class="price-wrapper">
+                                    <div class="new-price">{{ product.off_price|price_handler }}</div>
+                                    <span>تومان</span>
+                                </div>
+                            {% else %}
+                                <div class="price-wrapper">
+                                    <div class="price">{{ product.price|price_handler }}</div>
+                                    <span>تومان</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

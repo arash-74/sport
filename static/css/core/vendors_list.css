@@ -1,0 +1,53 @@
+a{
+    color: inherit;
+    text-decoration: none;
+}
+.vendors-container{
+    padding: 10px 15px;
+    display: grid;
+    grid-template-columns: repeat(2,450px);
+    place-content: center;
+    gap: 10px 15px;
+}
+.vendor-container{
+    height: 150px;
+    display: flex;
+    border: 1px solid var(--cthree);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+.vendor-container .img-container{
+    width: 40%;
+    height: 100%;
+}
+.vendor-container .info-container{
+    padding: 10px;
+}
+.vendor-container .verify-container{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 8px;
+    right: 8px;
+}
+.info-container .name-container,.info-container .contact-container{
+    font-size: 1.1rem;
+}
+.info-container .address-container,.info-container .rate-container{
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    font-size: 0.9rem;
+    & .icon{
+        width: 15px;
+        height: 15px;
+    }
+}
+.info-container .product-count{
+    font-size: 0.9rem;
+}
+.vendor-container:hover{
+        transform: translateY(-5px);
+    transition: 0.2s linear;
+}

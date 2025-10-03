@@ -1,0 +1,83 @@
+<script type="text/javascript">
+    let feature_product_list = document.querySelector('.featured-product-list .product-list')
+    let loading_container = document.querySelector('.loading-container')
+    let simple_product_list = document.querySelector('.simple-product-list')
+    let isLoading = false
+    let page = 2
+
+    function next_slide_feature_product_list() {
+        feature_product_list.scrollBy({left: 200})
+    }
+
+    function pre_slide_feature_product_list() {
+        feature_product_list.scrollBy({left: -200})
+    }
+
+    function load_page_handler() {
+        fetch(`{% url 'arashsport:product list' %}?page=${page}&min_price={{ min }}&max_price={{ max }}{% if order %}&order={{ order }}{% endif %}{% if category %}&category={{ category }}{% endif %}`, {
+            method: 'GET',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+        }).then(res => res.json()).then(data => {
+            if (data['status'] === 'ok') {
+                isLoading = false
+                page += 1
+                let product_item = null
+                data['item'].forEach(item => {
+                    product_item = `
+                        <a href="${item.product_get_absolute_url}" class="product">
+                        <div class="product-rate">${item.product_rate}</div>`
+                    if (item.product_off) {
+                        product_item += `<div class="off-perc">${item.product_off_perc}%</div>`
+                    }
+                    product_item += `<div class="img-container">
+                                                <img src="${item.image_url}">
+                                            </div>
+                                            <div class="info-container">
+                                                <div class="upper-section">
+                                                    <div class="product-title">${item.product_name}</div>
+                                                    <div class="vendor-info">${item.product_vendor_name}</div>
+                                                    </div>
+                                                    <div class="bottom-section">`
+                    if (item.product_off) {
+                        product_item += `<div class="old-price">${item.product_price}</div>
+                                                        <div class="price-wrapper">
+                                                            <div class="new-price">${item.product_off}</div>
+                                                            <span>تومان</span>
+                                                        </div>`
+                    } else {
+                        product_item += `<div class="price-wrapper">
+                                                            <div class="price">${item.product_price}</div>
+                                                            <span>تومان</span>
+                                                        </div>`
+                    }
+                    product_item += `</div></div></a>`
+                    simple_product_list.insertAdjacentHTML('beforeend', product_item)
+                })
+                if (!data['has_next']) {
+                    observer.disconnect()
+                }
+            }
+        })
+    }
+
+    function price_form_handler(e) {
+        let form = e.closest('form')
+        let data = new FormData(form)
+        let url = `products-list?min_price=${data.get('min-price')}&max_price=${data.get('max-price')}{% if order %}&order={{ order }}{% endif %}{% if category %}&category={{ category }}{% endif %}`
+        window.location.href = url
+    }
+
+    let observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !isLoading) {
+            isLoading = true
+            load_page_handler()
+        }
+    }, {
+        threshold: 0.3
+    })
+    window.addEventListener('load', () => {
+
+        observer.observe(loading_container)
+    })
+
+</script>

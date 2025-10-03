@@ -1,0 +1,190 @@
+.main-container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--cone);
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.main-container .message-container {
+    padding: 15px 20px;
+    position: fixed;
+    background-color: var(--ctwo);
+    color: white;
+    z-index: 5;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    border: 1px solid var(--cthree);
+    box-shadow: 0 0 10px var(--cthree);
+    border-radius: 15px;
+    opacity: 1;
+    transition: 0.2s linear;
+
+    &.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.main-container .preload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: var(--cone);
+    opacity: 1;
+    z-index: 99;
+    transition: opacity 0.4s linear;
+}
+
+.preload .img-container {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    animation: preload-animation 0.5s linear infinite alternate;
+
+}
+
+.main-container .first-section, .main-container .second-section {
+    /*height: 100%;*/
+    scroll-snap-align: start;
+}
+.main-container .first-section{
+    height: 100%;
+}
+.main-container .second-section {
+    background-color: white;
+    min-height: 100vh;
+}
+
+
+.first-section .slideshow-container {
+    width: 100%;
+    height: calc(100% - 70px);
+    position: relative;
+    overflow: hidden;
+}
+
+.slideshow-container > div {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.slideshow-container .img-container {
+    width: 50%;
+    height: 300px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    transition: all 0.5s linear;
+    /*overflow: hidden;*/
+    z-index: 3;
+    /*animation: slide-show-image-animation 2s 0.5s linear infinite;*/
+    /*transition: all 0.4s linear;*/
+
+}
+
+.slideshow-container > div:nth-child(1) .img-container, .slideshow-container div:nth-child(3) .img-container {
+    left: 0;
+    border-radius: 0 15px 50px 0;
+    overflow: hidden;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.55);
+
+    & img {
+        object-fit: cover;
+        object-position: top;
+    }
+
+    &.hidden {
+        left: -100%;
+    }
+}
+
+.slideshow-container > div:nth-child(2) .img-container {
+    right: 0;
+    border-radius: 15px 0 0 50px;
+    overflow: hidden;
+    box-shadow: -10px 10px 5px rgba(0, 0, 0, 0.55);
+
+    & img {
+        object-fit: cover;
+        object-position: top;
+
+    }
+
+    &.hidden {
+        right: -100%;
+    }
+}
+
+.slideshow-container .text-container {
+    width: 40%;
+    height: 150px;
+    top: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ctwo);
+    transform: translateY(-50%);
+    color: white;
+    border-radius: 15px;
+    border: 4px solid var(--cthree);
+    position: absolute;
+    font-size: 1.5rem;
+    transition: all 0.5s linear;
+    animation: slide-show-text-animation 20s linear alternate;
+}
+
+.slideshow-container > div:nth-child(1) .text-container, .slideshow-container > div:nth-child(3) .text-container {
+    right: 10%;
+
+    &.hidden {
+        right: -100%;
+        animation: none;
+    }
+}
+
+.slideshow-container > div:nth-child(2) .text-container {
+    left: 10%;
+
+    &.hidden {
+        left: -100%;
+        animation: none;
+    }
+}
+
+
+
+
+
+@keyframes preload-animation {
+    0% {
+        top: -10px;
+    }
+    100% {
+        top: 10px;
+    }
+}
+
+@keyframes slide-show-image-animation {
+    100% {
+        left: 10%;
+    }
+}
+
+@keyframes slide-show-text-animation {
+    100% {
+        top: 70%;
+    }
+}

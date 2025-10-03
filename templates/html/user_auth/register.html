@@ -1,0 +1,56 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% block title %}
+    ورود
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/user_auth/register.css' %}">
+{% endblock %}
+{% block main-container %}
+    <div class="main-container">
+        <div class="signin-container">
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message-container {% if forloop.counter0 == 0 %}{{ msg.tags }}{% endif %}">
+                        <p class="message">{{ msg }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="message-container">
+                    <p class="message"></p>
+                </div>
+            {% endif %}
+            <div class="second-section {% if not messages %}hide-msg{% endif %}">
+                <div class="image-container">
+                    <img src={% static 'images/grok_image_emm6c5.jpg' %}>
+                </div>
+                <form class="form-container" method="POST">
+                    {% csrf_token %}
+                    <div class="enter-email-container">
+                        <label>لطفا ایمیل خود را وارد کنید</label>
+                        <input type="email" name="email" value="{{ req_value.email }}">
+                        <button class="submit-btn send-code">ارسال کد</button>
+                        <span >یا</span>
+                        <div class="other-method-btns">
+                            <button class="google-btn button">ورود با gmail<img src={% static 'svg/google-svgrepo-com.svg' %}></button>
+                        </div>
+                    </div>
+                    <div class="enter-otp-container" style="display: none">
+                        <div class="upper-section">
+                            <label>لطفا کد تایید را وارد کنید</label>
+                            <input type="text" name="code" required maxlength="6">
+                        </div>
+                        <div class="middle-section">
+                            <button class="submit-btn resend-code" type="button">ارسال مجدد کد</button>
+                            <button class="submit-btn change-number" type="button">تغییر ایمیل</button>
+
+                        </div>
+                        <button class="submit-btn">ورود</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    {% include 'js/user_auth/register.js.html' %}
+{% endblock %}

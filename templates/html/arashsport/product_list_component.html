@@ -1,0 +1,168 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/product_list.css' %}">
+{% endblock %}
+{% block main-container %}
+    <div class="wrapper">
+        <div class="side-container">
+            <div class="search-container">
+                <form method="GET">
+                    <input name="search" id="id_search">
+                    <label class="search-icon" for="id_search">
+                        <img src="{% static 'svg/search-svgrepo-com (2).svg' %}">
+                    </label>
+                </form>
+            </div>
+            <div class="order-section">
+                <h4>مرتب سازی</h4>
+                <div class="orders-list">
+                    <a href="{% url 'arashsport:product list' %}?{% if category %}category={{ category.title }}&{% endif %}order=گران ترین"
+                       class="order-container">
+                        گران ترین
+                    </a>
+                    <a href="{% url 'arashsport:product list' %}?{% if category %}category={{ category.title }}&{% endif %}order=ارزان ترین"
+                       class="order-container">
+                        ارزان ترین
+                    </a>
+                    <br>
+                </div>
+
+            </div>
+            <div class="categories-section">
+                <h4>دسته بندی ها</h4>
+                <div class="categories-list">
+
+                    {% for category in categories %}
+                        <a href="{% url 'arashsport:product list' %}?category={{ category.title }}"
+                           class="category-container">
+                        <span class="title">
+                             {{ category.title }}
+                        </span>
+                            <span class="count">
+                            {{ category.products.count }}
+                        </span>
+                        </a>
+                    {% endfor %}
+                    <br>
+                </div>
+
+            </div>
+            <form method="GET" class="price-section" action="{% url 'arashsport:product list' %}?min">
+                <h4>فیلتر قیمت</h4>
+                <div class="input-container">
+                    <div>
+                        <label for="min-input">
+                            از:
+                        </label>
+                        <input id="min-input" name="min-price" value="{{ min }}">
+                    </div>
+                    <div>
+
+                        <label for="max-input">
+                            تا:
+                        </label>
+                        <input id="max-input" name="max-price" value="{{ max }}">
+                    </div>
+                </div>
+                <div class="button-container">
+
+                    <button type="button" onclick="price_form_handler(this)">فیلتر</button>
+                </div>
+            </form>
+
+        </div>
+        <div class="product-list">
+            <div class="featured-product-list">
+            <span class="title">
+                محصولات ویژه
+            </span>
+                <div class="product-wrapper">
+                    <div class="next-btn" onclick="next_slide_feature_product_list()">&lt;</div>
+                    <div class="product-list">
+                        {% for product in featured_products %}
+                            <a href={{ product.get_absolute_url }} class="product">
+                                {% if product.off_price %}
+                                    <div class="off-perc">{{ product.calc_off_percentage }}%</div>
+                                {% endif %}
+                                <div class="img-container">
+                                    <img src="{{ product.images.first.image.url }}">
+                                </div>
+                                <div class="info-container">
+
+                                    <div class="upper-section">
+                                        <div class="product-title">{{ product.name|truncatewords:4 }}</div>
+                                        <div class="product-rate">{{ product.rate }}</div>
+                                    </div>
+                                    <div class="bottom-section">
+                                        {% if product.off_price %}
+                                            <div class="old-price">{{ product.price|price_handler }}</div>
+                                            <div class="price-wrapper">
+                                                <div class="new-price">{{ product.off_price|price_handler }}</div>
+                                                <span>تومان</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="price-wrapper">
+                                                <div class="price">{{ product.price|price_handler }}</div>
+                                                <span>تومان</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+
+                        {% endfor %}
+                    </div>
+                    <div class="pre-btn" onclick="pre_slide_feature_product_list()">&gt;</div>
+                </div>
+
+            </div>
+            <div class="simple-product-list">
+                {% if not products %}
+                    <h4>محصولی یافت نشد!</h4>
+                {% endif %}
+                {% for product in products %}
+                    <a href={{ product.get_absolute_url }} class="product">
+                        <div class="product-rate">{{ product.rate }}</div>
+                        {% if product.off_price %}
+                            <div class="off-perc">{{ product.calc_off_percentage }}%</div>
+                        {% endif %}
+                        <div class="img-container">
+                            <img src="{{ product.images.first.image.url }}">
+                        </div>
+                        <div class="info-container">
+
+                            <div class="upper-section">
+                                <div class="product-title">{{ product.name|truncatewords:15 }}</div>
+                                <div class="vendor-info">{{ product.vendor.name }}</div>
+                            </div>
+                            <div class="bottom-section">
+                                {% if product.off_price %}
+                                    <div class="old-price">{{ product.price|price_handler }}</div>
+                                    <div class="price-wrapper">
+                                        <div class="new-price">{{ product.off_price|price_handler }}</div>
+                                        <span>تومان</span>
+                                    </div>
+                                {% else %}
+                                    <div class="price-wrapper">
+                                        <div class="price">{{ product.price|price_handler }}</div>
+                                        <span>تومان</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            {% if from_ == 'homepage' %}
+                <a href="{% url 'arashsport:product list' %}" class="link_to_product_list">نمایش تمام محصولات</a>
+            {% else %}
+                <div class="loading-container">
+
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% include 'js/arashsport/product_list.js.html' %}
+{% endblock %}

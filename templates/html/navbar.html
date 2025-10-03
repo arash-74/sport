@@ -1,0 +1,96 @@
+{% load static %}
+{% load arashtag %}
+<div class="nav-container">
+    <div class="label-container">
+        <img src={% static 'images/آرش اسپرت.png' %}>
+    </div>
+    <div class="links">
+        <div class="product-list-btn btn"><a href="{% url 'arashsport:product list' %}">محصولات</a></div>
+        <div class="venndor-list-btn btn"><a href="{% url 'arashsport:vendor list' %}">فروشنده ها</a></div>
+        <div class="category-btn btn" onmouseover="category_content_show(this)"
+             onmouseleave="category_content_hide(this)"><span>دسته بندی ها</span>
+            <div class="content">
+                {% for cat in categories %}
+                    <div class="item">
+                        <div class="img">
+                            <img src="{{ cat.image.url }}">
+                        </div>
+                        <div class="title-container">
+
+                            {{ cat.title }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+    <div style="display: flex; gap: 5px; align-items: center">
+        <div class="cart-container">
+            <div class="img-container">
+                <div class="new-marker{% if cart.cart %} show{% endif %}"></div>
+                <img src="{% static 'svg/trolley-svgrepo-com.svg' %}">
+            </div>
+            <div class="content-container">
+                <a href={% url 'arashsport:cart list' %}>مشاهده سبد</a>
+                <div class="item-list">
+                    {% for item in cart.cart_to_product %}
+                        <div class="item">
+
+                            <div class="img">
+                                <img src="{{ item.product.images.first.image.url }}">
+                            </div>
+
+                            <div class="info-container">
+                                <div class="name">{{ item.product.name|truncate:2 }}</div>
+                            </div>
+                            <div class="quantity">
+                                {{ item.qty }}
+                            </div>
+                            <div class="price-container">
+                                {% if item.product.off_price %}
+                                    {{ item.product.off_price }}
+                                {% else %}
+                                    {{ item.product.price }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="profile-container" onmouseover="profile_content_show(this)"
+                 onmouseleave="profile_content_hide(this)">
+                <img src="{% static 'svg/profile-svgrepo.svg' %}">
+                <div class="content">
+                    <a class="link" href="{% url 'user_auth:profile' %}">پروفایل</a>
+                    <a class="link" href="{% url 'user_auth:logout' %}">خروج</a>
+                </div>
+            </div>
+        {% else %}
+            <a class="register-link" href="{% url 'user_auth:register' %}">ورود</a>
+        {% endif %}
+    </div>
+    <script>
+        let profile_content = document.querySelector('.profile-container .content')
+        let category_content = document.querySelector('.category-btn .content')
+
+        function profile_content_show(el) {
+            profile_content.classList.add('show')
+        }
+
+        function profile_content_hide(el) {
+            profile_content.classList.remove('show')
+
+        }
+
+        function category_content_show(el) {
+            category_content.classList.add('show')
+        }
+
+        function category_content_hide(el) {
+            category_content.classList.remove('show')
+        }
+    </script>
+</div>

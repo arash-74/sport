@@ -1,0 +1,58 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% block title %}آرش اسپرت{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/home.css' %}">
+{% endblock %}
+{% block main-container %}
+    <div class="main-container">
+        {% if messages %}
+            <div class="message-container">
+                {% for msg in messages %}
+                    {% if forloop.counter0 == 0 %}
+                        <p>{{ msg }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="preload">
+            <div class="img-container">
+                <img src="{% static 'svg/gym-weight-svgrepo-com.svg' %}">
+            </div>
+        </div>
+        <div class="first-section">
+            {% include 'html/navbar.html' %}
+
+            <div class="slideshow-container">
+                <div class="slide1">
+                    <div class="img-container">
+                        <img src={% static 'images/grok_image_x1slfc.jpg' %}>
+                    </div>
+                    <div class="text-container">
+                        <p>اولین و معتبر ترین سایت تخصصی محصولات ورزشی</p>
+                    </div>
+                </div>
+                <div class="slide2">
+                    <div class="img-container hidden">
+                        <img src={% static 'images/grok_image_c2uau3.jpg' %}>
+                    </div>
+                    <div class="text-container hidden">
+                        <p>با قدرت حرکت کن, با ما مجهز شو</p>
+                    </div>
+                </div>
+                <div class="slide3">
+                    <div class="img-container hidden">
+                        <img src={% static 'images/grok_image_cy2pyo.jpg' %}>
+                    </div>
+                    <div class="text-container hidden">
+                        <p>گام هایت را محکم کن تجهیزاتت با ما</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="second-section">
+            {% include 'html/arashsport/product_list_component.html' with from_='homepage' products=products featured_products=featured_products %}
+        </div>
+    </div>
+    {% include 'js/arashsport/home.js.html' %}
+{% endblock %}

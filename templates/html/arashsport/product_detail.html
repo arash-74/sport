@@ -1,0 +1,185 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}محصول{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/core/product_detail.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.7/htmx.min.js"
+            integrity="sha512-IisGoumHahmfNIhP4wUV3OhgQZaaDBuD6IG4XlyjT77IUkwreZL3T3afO4xXuDanSalZ57Un+UlAbarQjNZCTQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    <div class="wrapper">
+        <div class="message-container hide">
+            <p></p>
+        </div>
+
+        <div class="product-info">
+            <div class="product-img">
+                <div class="right">
+                    <div class="preview-container">
+                        <div class="lense-container"></div>
+                        <img src="{{ product.images.first.image.url }}">
+                    </div>
+                    <div class="other-container">
+                        {% for img in product.images.all %}
+                            <div class="other-img">
+                                <img src="{{ img.image.url }}" onclick="set_preview(this)">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="zoom-image-container">
+                    <div class="img-container">
+                    </div>
+                </div>
+            </div>
+            <div class="info-container">
+                {{ product.name }}
+                <div class="quantity">موجودی: {{ product.stack_number }}
+                    <input name="quantity" value=1 type="number" max="{{ product.stack }}" min="1">
+                </div>
+                <div class="wish-container" onclick="wish_handler(this)" data-status="{% if not wish_status %}fa-regular{% else %}fa-solid{% endif %}">
+                        <i class="fa-{% if not wish_status %}regular{% else %}solid{% endif %} fa-bookmark"></i>
+                </div>
+                <div class="purchase">
+                    <button class="add-cart" onclick="add_cart_handler(this)">افزودن به سبد</button>
+                </div>
+                <div class="price">
+                    {% if product.off_price %}
+                        <div class="old-price">{{ product.price|price_handler }}</div>
+                        <div class="price-wrapper">
+                            <div class="new-price">{{ product.off_price|price_handler }}</div>
+                            <span>تومان</span>
+                        </div>
+                    {% else %}
+                        <div class="price-wrapper">
+                            <div class="price">{{ product.price|price_handler }}</div>
+                            <span>تومان</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="similar-products">
+            <span class="title">
+                محصولات مشابه
+            </span>
+            <div class="product-wrapper">
+                <div class="product-list">
+                    {% for product in similar_products %}
+                        <a href={{ product.get_absolute_url }} class="product">
+                            {% if product.off_price %}
+                                <div class="off-perc">{{ product.calc_off_percentage }}%</div>
+                            {% endif %}
+                            <div class="img-container">
+                                <img src="{{ product.images.first.image.url }}">
+                            </div>
+                            <div class="info-container">
+
+                                <div class="upper-section">
+                                    <div class="product-title">{{ product.name|truncatewords:4 }}</div>
+                                    <div class="product-rate">{{ product.rate }}</div>
+                                </div>
+                                <div class="bottom-section">
+                                    {% if product.off_price %}
+                                        <div class="old-price">{{ product.price|price_handler }}</div>
+                                        <div class="price-wrapper">
+                                            <div class="new-price">{{ product.off_price|price_handler }}</div>
+                                            <span>تومان</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="price-wrapper">
+                                            <div class="price">{{ product.price|price_handler }}</div>
+                                            <span>تومان</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+        <div class="description-vendor">
+            <div class="tab-container">
+                <button data-target="product-description" onclick="set_description(this)">توضیحات</button>
+                <button data-target="comment-container" onclick="set_description(this)">نظرات ({{ comments_list.count }})</button>
+                <button data-target="vendor-container" onclick="set_description(this)">فروشنده</button>
+            </div>
+            <hr>
+            <div class="content">
+                <div class="product-description show">
+                    {{ product.description|safe }}
+                </div>
+                <div class="vendor-container">
+                    <a href="{{ vendor.get_absolute_url }}" class="img-container">
+                        {% if vendor.verified %}
+                            <div class="verify-container">
+                                <img src="{% static 'svg/check-circle-svgrepo-com.svg' %}">
+                            </div>
+                        {% endif %}
+                        <img src="{{ vendor.image.url }}">
+                    </a>
+                    <div class="vendor-info">
+                        <div class="info-container">
+                            <div class="name-container">
+                                {{ vendor.name }}
+                            </div>
+                            <div class="contact-container">
+                                {{ vendor.contact }}
+                            </div>
+                            <div class="address-container">
+                    <span class="icon"><img
+                            src="{% static 'svg/location-pin-alt-1-svgrepo-com.svg' %}"></span>{{ vendor.address }}
+                            </div>
+                            <div class="rate-container">
+                    <span class="icon"><img
+                            src="{% static 'svg/star-svgrepo-com.svg' %}"></span>{{ vendor.vid|calc_vendor_rate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-container">
+                    <div class="right">
+                        {% if comments_list %}
+                            {% for cm in comments_list %}
+                                <div class="cm-container">
+                                    <div class="user-info">
+                                        {{ cm.user.get_full_name }}
+                                    </div>
+                                    <div class="cm-content">
+                                        {{ cm.content }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div> نظر متنی ثبت نشده است!</div>
+                        {% endif %}
+                    </div>
+                    <form method="POST" action="{% url 'arashsport:add review' product.id %}" class="left">
+                        <div class="error-container" style="display: none; color: red">
+                        </div>
+                        <div class="rate-container">
+                            <label>امتیاز از ۵</label>
+                            {{ form.rate }}
+                        </div>
+                        <div class="content-container">
+                            <label>متن</label>
+                            {{ form.content }}
+                        </div>
+                        <button type="submit">ثبت</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% include 'js/arashsport/product_detail.js.html' %}
+{% endblock %}

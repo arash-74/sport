@@ -1,0 +1,75 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+}
+
+.wrapper > .right {
+    width: 25%;
+}
+
+.wrapper .right .total-price-container {
+    padding: 10px;
+    background-color: var(--cone);
+    color: white;
+    border-radius: 15px;
+
+    & .total-price {
+        font-size: 1.3rem;
+    }
+}
+
+.wrapper .right .address-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    border-right: 2px solid var(--cone);
+    margin: 10px;
+
+    & a {
+        text-decoration: underline;
+    }
+}
+
+.wrapper > .left {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.wrapper .left .cart-list{
+    height: 350px;
+    width: 100%;
+    overflow-y: auto;
+    border: 1px solid var(--cone);
+    padding:  5px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: inset 0 0 5px var(--cone);
+}
+.wrapper .left .cart-list .item-container {
+    display: grid;
+    grid-template-columns: 80px repeat(4, 1fr) 20px;
+    border: 1px solid var(--cthree);
+}
+
+.left .cart-list .item-container > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.left .cart-list .remove-btn{
+    color:red;
+    cursor: pointer;
+}
+.left .pay-btn{
+    padding: 5px 10px;
+    background-color: var(--cone);
+    width: max-content;
+    color: white;
+    &:hover{
+        color: var(--cthree);
+    }
+}

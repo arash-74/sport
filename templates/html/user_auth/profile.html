@@ -1,0 +1,111 @@
+{% extends 'html/base.html' %}
+{% load static %}
+{% load arashtag %}
+{% block title %}
+    پروفایل
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/user_auth/profile.css' %}">
+{% endblock %}
+{% block main-container %}
+    {% include 'html/navbar.html' %}
+    <div class="wrapper">
+        <h4>اطلاعات</h4>
+        <form method="POST" class="user-info-container">
+            {% csrf_token %}
+            <div class="input-container first-name">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+            </div>
+            <div class="input-container last-name">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+            </div>
+            <div class="input-container bio">
+                {{ form.bio.label_tag }}
+                {{ form.bio }}
+            </div>
+            <div class="input-container address">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+            </div>
+            <div class="input-container phone">
+                {{ form.phone.label_tag }}
+                {{ form.phone }}
+            </div>
+            <br>
+            <button class="save-btn" disabled type="submit">ذخیره</button>
+        </form>
+        {% if wish_lists %}
+            <h4>فهرست علاقه مندی ها</h4>
+            <div class="wish-lists-container">
+                <div class="product-wrapper">
+                    <div class="product-list">
+                        {% for product in wish_lists %}
+                            <a href={{ product.get_absolute_url }} class="product">
+                                {% if product.off_price %}
+                                    <div class="off-perc">{{ product.calc_off_percentage }}%</div>
+                                {% endif %}
+                                <div class="img-container">
+                                    <img src="{{ product.images.first.image.url }}">
+                                </div>
+                                <div class="info-container">
+
+                                    <div class="upper-section">
+                                        <div class="product-title">{{ product.name|truncatewords:4 }}</div>
+                                        <div class="product-rate">{{ product.rate }}</div>
+                                    </div>
+                                    <div class="bottom-section">
+                                        {% if product.off_price %}
+                                            <div class="old-price">{{ product.price|price_handler }}</div>
+                                            <div class="price-wrapper">
+                                                <div class="new-price">{{ product.off_price|price_handler }}</div>
+                                                <span>تومان</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="price-wrapper">
+                                                <div class="price">{{ product.price|price_handler }}</div>
+                                                <span>تومان</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        {% endif %}
+        {% if user.orders.exists %}
+            <h4>سفارشات</h4>
+            <div class="order-lists-container">
+                {% for order in user.orders.all %}
+                    <div class="order-container">
+                        <div>{{ order.id }}</div>
+                        <div>
+                            {% if order.is_paid %}
+                                پرداخت شده
+                            {% else %}
+                                پرداخت نشده
+                            {% endif %}
+                        </div>
+                        <div>{{ order.get_status_display }}</div>
+                        <div>{{ order.total_price|price_handler }} تومان</div>
+                        <div>{{ order.date }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <script type="text/javascript">
+        let profile_info_input = document.querySelector('form')
+        profile_info_input.addEventListener('input', e => {
+            if (e.target.matches('input,textarea')) {
+                document.querySelector('form button').disabled = false
+                console.log(document.querySelector('form button'))
+            }
+        })
+    </script>
+{% endblock %}
